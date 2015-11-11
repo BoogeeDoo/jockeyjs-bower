@@ -1,0 +1,25 @@
+{
+  "name": "jockeyjs",
+  "homepage": "https://github.com/BoogeeDoo/jockeyjs-bower",
+  "authors": [
+    "Tim Coulter <tim@timothyjcoulter.com>",
+    "XadillaX <i@2333.moe>"
+  ],
+  "description": "Bower wrapper for JockeyJs.",
+  "main": "jockey.js",
+  "moduleType": [],
+  "keywords": [
+    "Jockey"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}
