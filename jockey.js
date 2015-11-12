@@ -22,7 +22,7 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-;(function () {
+;(function() {
 
     // Non-accessible variable to send to the app, to ensure events only
     // come from the desired host.
@@ -41,7 +41,7 @@
             this.dispatchMessage("callback", envelope, function() {});
         },
 
-        triggerCallback: function(id,data) {
+        triggerCallback: function(id, data) {
             var dispatcher = this;
 
             // Alerts within JS callbacks will sometimes freeze the iOS app.
@@ -66,13 +66,13 @@
                 delete dispatcher.callbacks[envelope.id];
             };
 
-        var src = "jockey://" + type + "/" + envelope.id + "?" + encodeURIComponent(JSON.stringify(envelope));
+            var src = "jockey://" + type + "/" + envelope.id + "?" + encodeURIComponent(JSON.stringify(envelope));
             var iframe = document.createElement("iframe");
             iframe.setAttribute("src", src);
             document.documentElement.appendChild(iframe);
             iframe.parentNode.removeChild(iframe);
             iframe = null;
-      }
+        }
     };
 
     var Jockey = {
@@ -83,7 +83,7 @@
         messageCount: 0,
 
         on: function(type, fn) {
-            if (!this.listeners.hasOwnProperty(type) || !this.listeners[type] instanceof Array) {
+            if (!(this.listeners.hasOwnProperty(type)) || !(this.listeners[type] instanceof Array)) {
                 this.listeners[type] = [];
             }
 
@@ -91,7 +91,7 @@
         },
 
         off: function(type) {
-            if (!this.listeners.hasOwnProperty(type) || !this.listeners[type] instanceof Array) {
+            if ((!this.listeners.hasOwnProperty(type)) || !(this.listeners[type] instanceof Array)) {
                 this.listeners[type] = [];
             }
 
@@ -151,7 +151,7 @@
         // a given message.
         triggerCallback: function(data) {
             var dataObj = JSON.parse(data);
-            this.dispatcher.triggerCallback(dataObj.messageId,dataObj.data);
+            this.dispatcher.triggerCallback(dataObj.messageId, dataObj.data);
         },
 
         createEnvelope: function(id, type, payload) {
@@ -166,7 +166,9 @@
 
     // i.e., on a Desktop browser.
     var nullDispatcher = {
-        send: function(envelope, complete) { complete(); },
+        send: function(envelope, complete) {
+            complete();
+        },
         triggerCallback: function() {},
         sendCallback: function() {}
     };
@@ -175,7 +177,7 @@
     // Looking for equivalent Android implementation.
     var i = 0,
         iOS = false,
-        iDevice = ['iPad', 'iPhone', 'iPod'];
+        iDevice = ["iPad", "iPhone", "iPod"];
 
     for (; i < iDevice.length; i++) {
         if (navigator.platform.indexOf(iDevice[i]) >= 0) {
