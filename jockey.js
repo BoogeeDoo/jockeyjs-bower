@@ -41,13 +41,13 @@
             this.dispatchMessage("callback", envelope, function() {});
         },
 
-        triggerCallback: function(id) {
+        triggerCallback: function(id,data) {
             var dispatcher = this;
 
             // Alerts within JS callbacks will sometimes freeze the iOS app.
             // Let's wrap the callback in a timeout to prevent this.
             setTimeout(function() {
-                dispatcher.callbacks[id]();
+                dispatcher.callbacks[id](data);
             }, 0);
         },
 
@@ -60,20 +60,20 @@
 
             var dispatcher = this;
 
-            this.callbacks[envelope.id] = function() {
-                complete();
+            this.callbacks[envelope.id] = function(data) {
+                complete(data);
 
                 delete dispatcher.callbacks[envelope.id];
             };
 
-	    var src = "jockey://" + type + "/" + envelope.id + "?" + encodeURIComponent(JSON.stringify(envelope));
-            var iframe = document.createElement("iframe"); 
-            iframe.setAttribute("src", src); 
-            document.documentElement.appendChild(iframe); 
-            iframe.parentNode.removeChild(iframe); 
-            iframe = null; 
-	  }
-	};   
+        var src = "jockey://" + type + "/" + envelope.id + "?" + encodeURIComponent(JSON.stringify(envelope));
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("src", src);
+            document.documentElement.appendChild(iframe);
+            iframe.parentNode.removeChild(iframe);
+            iframe = null;
+      }
+    };
 
     var Jockey = {
         listeners: {},
@@ -149,8 +149,9 @@
         // Called by the native application in response to an event sent to it.
         // This will trigger the callback passed to the send() function for
         // a given message.
-        triggerCallback: function(id) {
-            this.dispatcher.triggerCallback(id);
+        triggerCallback: function(data) {
+            var dataObj = JSON.parse(data);
+            this.dispatcher.triggerCallback(dataObj.messageId,dataObj.data);
         },
 
         createEnvelope: function(id, type, payload) {
@@ -188,9 +189,9 @@
     // From here: http://stackoverflow.com/questions/4460205/detect-ipad-iphone-webview-via-javascript
 
     var UIWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
-	var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
-	
-    if ((iOS && UIWebView) || isAndroid) { 
+    var isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;
+
+    if ((iOS && UIWebView) || isAndroid) {
         Jockey.dispatcher = Dispatcher;
     } else {
         Jockey.dispatcher = nullDispatcher;
