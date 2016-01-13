@@ -1,6 +1,6 @@
 {
   "name": "jockeyjs",
-  "version": "10.0.0",
+  "version": "10.0.2",
   "description": "Bower wrapper for JockeyJs.",
   "main": "jockey.js",
   "scripts": {
